@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tom Guillermin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^13.0.0",
+    "dts-generator": "^1.6.3"
+  }
 }

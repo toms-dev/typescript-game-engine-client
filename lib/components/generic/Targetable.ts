@@ -1,6 +1,6 @@
 
-import Entity from "../Entity";
-import IComponent from "./IComponent";
+import Entity from "../../Entity";
+import IComponent from "../IComponent";
 export default class Targetable implements IComponent {
 
 	private targeted: boolean;
