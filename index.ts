@@ -1,5 +1,5 @@
 
-/// <reference path="typings/tsd.d.ts" />
+// <reference path="typings/tsd.d.ts" />
 
 import Game from "./lib/Game";
 import Entity from "./lib/Entity";
