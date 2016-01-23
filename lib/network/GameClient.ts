@@ -71,7 +71,7 @@ export default class GameClient {
 		var payload = json.data;
 
 		if ([InternalMessageType.SERVER_STATE, InternalMessageType.PING_MEASURE, InternalMessageType.PING_VALUE].indexOf(type) == -1) {
-			console.debug("Received ", type, InternalMessageType[type]);
+			console.debug("Received ", type, (<any> InternalMessageType)[type]);
 		}
 
 		// Check if response to request

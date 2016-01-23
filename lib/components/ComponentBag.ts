@@ -32,7 +32,7 @@ export default class ComponentBag {
 			this.components[i].loadState(cState);
 			for (var prop in cState) {
 				if (! cState.hasOwnProperty(prop)) continue;
-				this[prop] = cState[prop];
+				(<any>this)[prop] = cState[prop];
 			}
 		}
 	}

@@ -51,7 +51,7 @@ export default class Command {
 				failureCallback: CommandFailureCallback = null
 	) {
 		this.commandID = Command.commandID_AutoIncrement++;
-		this.name = CommandType[type];
+		this.name = (<any> CommandType)[type];
 		this.params = args;
 
 		this.successCallback = successCallback;
