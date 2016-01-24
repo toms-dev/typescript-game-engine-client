@@ -8,6 +8,7 @@ import Vector3LERP from "../../math/Vector3LERP";
 export default class Movement implements IComponent {
 
 	private position: Vector3;
+	private radius: number;
 	private speed: Vector3;
 	private maxSpeed: number;
 	private acceleration: Vector3;
@@ -19,6 +20,7 @@ export default class Movement implements IComponent {
 	constructor() {
 		this.position = new Vector3();
 		this.speed = new Vector3();
+		this.radius = 10;
 
 		this.firstLoad = true;
 		this.positionLERP = null;
@@ -65,5 +67,9 @@ export default class Movement implements IComponent {
 
 	getPosition():Vector3{
 		return this.position;
+	}
+
+	getRadius():number {
+		return this.radius;
 	}
 }
