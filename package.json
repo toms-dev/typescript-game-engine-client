@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "tsd reinstall rebundle && tsc",
+    "postinstall": "tsd link && tsd reinstall rebundle && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tom Guillermin",
   "license": "ISC",
   "dependencies": {
     "browserify": "^13.0.0",
-    "dts-generator": "^1.6.3"
+    "dts-generator": "^1.6.3",
+    "typescript": "^1.7.5"
   }
 }
