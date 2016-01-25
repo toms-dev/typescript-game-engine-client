@@ -9,6 +9,12 @@ import PlayerControl from "./components/common/PlayerControl";
 import CommandSender from "./components/common/CommandSender";
 import ServerState from "./network/ServerState";
 import ComponentBag from "./components/ComponentBag";
+import NamedEntityTypeResolver from "./entityTyping/NamedEntityTypeResolver";
+import DecorationContext from "./decorators/DecorationContext";
+import EntityTypeResolver from "./entityTyping/EntityTypeResolver";
+import Class from "./utils/Class";
+import {Named as NamedEntityTyping} from "./entityTyping/EntityTypings";
+import EntityTypingClass from "./decorators/EntityTypingClass";
 
 
 declare var window: any;
@@ -19,6 +25,8 @@ export default class Game extends ComponentBag {
 	private client: GameClient;
 
 	public world: World;
+
+	public context: DecorationContext;
 
 	// Rendering
 	private renderer: Renderer;
@@ -42,8 +50,11 @@ export default class Game extends ComponentBag {
 
 		this.world = new World();
 
+
+
 		this.keyboard = new Keyboard();
 		this.mouse = new Mouse(this.world);
+
 
 		// Manage UI
 		//
@@ -54,6 +65,50 @@ export default class Game extends ComponentBag {
 		window.game = this;
 
 		this.controlledEntity = null;
+	}
+
+	loadContext(context: DecorationContext): void {
+		this.context = context;
+
+		var resolvers = this.buildTypeResolvers(context);
+		this.world.loadEntityTypeResolvers(resolvers);
+	}
+
+	/**
+	 * Uses the context (containing metadata provided by decorators) to configure the resolvers for all the declared
+	 * entities.
+	 * @param context
+	 * @returns {{}}
+	 */
+	private buildTypeResolvers(context: DecorationContext): {[metaTypeName: string]: EntityTypeResolver} {
+		// Manage Entity Type resolvers
+		var resolvers: {[metaTypeName: string]: EntityTypeResolver} = {};
+
+		// Instantiate the different kind of resolvers
+		var namedResolver = new NamedEntityTypeResolver();
+		// TODO: load from context (which is fed by decorators in entities)
+
+		var entityClasses = context.getDeclaredClasses("entity");
+		for (var i = 0; i < entityClasses.length; ++i) {
+			var entityClass: Class<Entity> = entityClasses[i];
+			// Retrieve typing data
+			var typing: EntityTypingClass = Reflect.getMetadata('typing', entityClass);
+			// Process it the right way
+			if (typing instanceof NamedEntityTyping) {
+				namedResolver.defineType(typing.typeName, entityClass);
+				// TODO: each resolver could try to accept() an EntityTypingClass instance and do the configuration
+				// itself (if relevant)
+			}
+			else {
+				throw new Error("Don't know how to process typing '"+(<any>typing.constructor).name+"'");
+			}
+			console.debug("GOT TYPING FROM CLASS "+(<any>entityClass).name, typing);
+		}
+
+		// Store the resolver in the result
+		resolvers["namedType"] = namedResolver;
+
+		return resolvers;
 	}
 
 	start() {
@@ -106,7 +161,7 @@ export default class Game extends ComponentBag {
 		requestAnimationFrame(() => {
 			setTimeout(() => {
 				this.mainLoop();
-			}, 0);
+			}, 500);
 		});
 
 		var now = new Date().getTime();
@@ -143,10 +198,7 @@ export default class Game extends ComponentBag {
 	processServerState(data: ServerState):void {
 		this.world.processServerState(data.world);
 		this.commandSender.processCommandResponses(data.commandResponses);
-
-		// TODO: update UIs
-		console.log("Got server state:", data);
-		window.leaderBoard = data.leaderBoard;
+		//console.log("Got server state:", data);
 	}
 
 	processPingValue(ping:number):void {

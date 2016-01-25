@@ -2,13 +2,20 @@ import Entity from "./Entity";
 //import EntityType from "./EntityType";
 import Vector3 from "./math/Vector3";
 import Movement from "./components/common/Movement";
+import EntityTypeResolver from "./entityTyping/EntityTypeResolver";
 
 export default class World {
 
 	private entities:Entity[];
+	private entityTypeResolvers: {[metaTypeName: string]: EntityTypeResolver};
 
 	constructor() {
 		this.entities = [];
+		this.entityTypeResolvers = null;
+	}
+
+	loadEntityTypeResolvers(resolvers: {[metaTypeName: string]: EntityTypeResolver}): void {
+		this.entityTypeResolvers = resolvers;
 	}
 
 	getEntity(id:number):Entity {
@@ -56,6 +63,15 @@ export default class World {
 		var entityType = entityData.type;
 
 		// TODO: [META] Find the class to instantiate from their declaration via decorators
+		console.debug("Entity type data", entityType);
+		console.debug("Defined resolvers:", this.entityTypeResolvers);
+		var typeResolver = this.entityTypeResolvers[entityType.metaType];
+		if (!typeResolver) {
+			throw new Error("Unsupported entity meta-type: "+entityType.metaType);
+		}
+		console.debug("Resolver: ", typeResolver);
+		var entity = typeResolver.resolve(entityType.typeData);
+
 		/*var typeMapping:any = {};
 
 		typeMapping[EntityType.BOARDS] = Boards;
@@ -66,12 +82,11 @@ export default class World {
 
 
 		var e = new EntityClass();*/
-		var e = new Entity();
 
-		e.loadState(entityData);
-		this.entities.push(e);
-		console.log("Spawned entity:", e);
-		return e;
+		entity.loadState(entityData);
+		this.entities.push(entity);
+		console.log("Spawned entity:", entity);
+		return entity;
 	}
 
 	getClosestEntityNear(coords:Vector3, additionalFilter?: (ent: Entity) => boolean) {
@@ -96,6 +111,23 @@ export default class World {
 			entity: bestEntity,
 			distance: bestDist
 		};
+	}
+
+	getEntitiesAt(coords:Vector3): Entity[] {
+		console.log("Searching through "+this.entities.length+ " entities");
+		return this.entities.filter((entity:Entity) => {
+			console.log("Considering:", entity);
+			var movement:Movement = entity.getComponent(Movement);
+			if (! movement) {
+				console.log("NO MOVEMENT!");
+				return false;
+			}
+
+			var dist = movement.getPosition().to(coords).norm();
+			console.log("DISTANCE: "+dist);
+
+			return dist <= movement.getRadius();
+		});
 	}
 
 	private removeEntityByID(entityID:number):void {
