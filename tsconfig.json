@@ -6,6 +6,9 @@
     "noImplicitAny": true,
     "experimentalDecorators": true
   },
+  "files": [
+    "index.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
