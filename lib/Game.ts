@@ -159,9 +159,10 @@ export default class Game extends ComponentBag {
 			return;
 		}
 		requestAnimationFrame(() => {
-			setTimeout(() => {
+			/*setTimeout(() => {
 				this.mainLoop();
-			}, 500);
+			}, 500);*/
+			this.mainLoop();
 		});
 
 		var now = new Date().getTime();

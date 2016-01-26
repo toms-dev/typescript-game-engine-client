@@ -20,6 +20,9 @@ export default class PlayerControlled implements IComponent {
 		return this.focused;
 	}
 
+	receiveEvent(eventName: string, args: any[]): void {
+	}
+
 	loadState(entityData:any):void {
 	}
 

@@ -38,6 +38,9 @@ export default class Drawable implements IComponent {
 		this.image.src = "img/"+this.spriteName+".png";
 	}
 
+	receiveEvent(eventName: string, args: any[]): void {
+	}
+
 	tick(delta:number):void {
 	}
 

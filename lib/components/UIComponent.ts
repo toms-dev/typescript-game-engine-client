@@ -16,6 +16,8 @@ abstract class UIElement implements IComponent {
 
 	abstract tick(delta:number, now:number):void;
 
+	abstract receiveEvent(eventName: string, args: any[]): void;
+
 }
 
 export default UIElement;

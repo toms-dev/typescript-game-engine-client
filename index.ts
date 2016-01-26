@@ -3,6 +3,7 @@ import Entity from "./lib/Entity";
 import EntityTyping from "./lib/entityTyping/EntityTypings";
 import IComponent from "./lib/components/IComponent";
 import UIComponent from "./lib/components/UIComponent";
+import EventAdapter from "./lib/components/common/EventAdapter";
 import MovementComponent from "./lib/components/common/Movement";
 import Command from "./lib/commands/Command";
 import CommandSender from "./lib/components/common/CommandSender";
@@ -23,7 +24,8 @@ export {
 	// Core classes
 	Game, Entity,
 	// Components
-	IComponent, UIComponent, MovementComponent,
+	IComponent, UIComponent, EventAdapter,
+	MovementComponent,
 	// Commands
 	Command, CommandSender,
 

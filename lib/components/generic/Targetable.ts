@@ -11,6 +11,9 @@ export default class Targetable implements IComponent {
 		this.targeted = false;
 	}
 
+	receiveEvent(eventName: string, args: any[]): void {
+	}
+
 	loadState(entityData:any):void {
 	}
 

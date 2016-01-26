@@ -6,7 +6,7 @@ import EntityTypeResolver from "./entityTyping/EntityTypeResolver";
 
 export default class World {
 
-	private entities:Entity[];
+	private entities: Entity[];
 	private entityTypeResolvers: {[metaTypeName: string]: EntityTypeResolver};
 
 	constructor() {
@@ -18,7 +18,7 @@ export default class World {
 		this.entityTypeResolvers = resolvers;
 	}
 
-	getEntity(id:number):Entity {
+	getEntity(id: number): Entity {
 		for (var i = 0; i < this.entities.length; ++i) {
 			var e = this.entities[i];
 			if (e.guid == id) return e;
@@ -26,11 +26,11 @@ export default class World {
 		return null;
 	}
 
-	getEntities():Entity[] {
+	getEntities(): Entity[] {
 		return this.entities;
 	}
 
-	processServerState(worldData:any):void {
+	processServerState(worldData: any): void {
 		var entities = worldData.entities;
 
 		for (var i = 0; i < entities.length; ++i) {
@@ -57,7 +57,7 @@ export default class World {
 		}
 	}
 
-	private spawnEntity(entityData: any):Entity {
+	private spawnEntity(entityData: any): Entity {
 		console.log("Spawning from data:", entityData);
 
 		var entityType = entityData.type;
@@ -67,21 +67,21 @@ export default class World {
 		console.debug("Defined resolvers:", this.entityTypeResolvers);
 		var typeResolver = this.entityTypeResolvers[entityType.metaType];
 		if (!typeResolver) {
-			throw new Error("Unsupported entity meta-type: "+entityType.metaType);
+			throw new Error("Unsupported entity meta-type: " + entityType.metaType);
 		}
 		console.debug("Resolver: ", typeResolver);
 		var entity = typeResolver.resolve(entityType.typeData);
 
 		/*var typeMapping:any = {};
 
-		typeMapping[EntityType.BOARDS] = Boards;
-		typeMapping[EntityType.BULLET] = Bullet;
-		typeMapping[EntityType.SHIP] = Ship;
+		 typeMapping[EntityType.BOARDS] = Boards;
+		 typeMapping[EntityType.BULLET] = Bullet;
+		 typeMapping[EntityType.SHIP] = Ship;
 
-		var EntityClass:new () => Entity = typeMapping[entityType];
+		 var EntityClass:new () => Entity = typeMapping[entityType];
 
 
-		var e = new EntityClass();*/
+		 var e = new EntityClass();*/
 
 		entity.loadState(entityData);
 		this.entities.push(entity);
@@ -89,17 +89,17 @@ export default class World {
 		return entity;
 	}
 
-	getClosestEntityNear(coords:Vector3, additionalFilter?: (ent: Entity) => boolean) {
+	getClosestEntityNear(coords: Vector3, additionalFilter?: (ent: Entity) => boolean) {
 		var bestDist = Infinity,
 			bestEntity: Entity = null;
 		/*console.log("Nearest: ", coords);
 		 console.log("Entities:", this.entities);*/
-		this.entities.forEach((entity:Entity) => {
+		this.entities.forEach((entity: Entity) => {
 			if (additionalFilter) {
-				if (! additionalFilter(entity)) return;
+				if (!additionalFilter(entity)) return;
 			}
 			console.log("Filter match:", entity);
-			var movement:Movement = entity.getComponent(Movement);
+			var movement: Movement = entity.getComponent(Movement);
 			var dist = movement.getPosition().to(coords).norm();
 			if (dist < bestDist) {
 				bestDist = dist;
@@ -113,28 +113,52 @@ export default class World {
 		};
 	}
 
-	getEntitiesAt(coords:Vector3): Entity[] {
-		console.log("Searching through "+this.entities.length+ " entities");
-		return this.entities.filter((entity:Entity) => {
-			console.log("Considering:", entity);
-			var movement:Movement = entity.getComponent(Movement);
-			if (! movement) {
-				console.log("NO MOVEMENT!");
-				return false;
-			}
+	/**
+	 * Returns all the entities at a given position in the world. The list is sorted by ascending distance to coords.
+	 * @param coords
+	 * @returns {Entity[]}
+	 */
+	getEntitiesAt(coords: Vector3): Entity[] {
+		console.log("Searching through " + this.entities.length + " entities");
 
-			var dist = movement.getPosition().to(coords).norm();
-			console.log("DISTANCE: "+dist);
+		return this.entities.map((entity: Entity) => {
+				console.log("Considering:", entity);
+				var movement: Movement = entity.getComponent(Movement);
+				if (!movement) {
+					console.log("NO MOVEMENT!");
+					return false;
+				}
 
-			return dist <= movement.getRadius();
-		});
+				var dist = movement.getPosition().to(coords).norm();
+				console.log("DISTANCE: " + dist);
+
+				return {
+					dist: dist,
+					entity: entity
+				};
+			})
+			.filter((data: EntityAtDistance) => {
+				var movement: Movement = data.entity.getComponent(Movement);
+				return data.dist <= movement.getRadius();
+			})
+			.sort((data1: EntityAtDistance, data2: EntityAtDistance) => {
+				return data1.dist - data2.dist;
+			})
+			.map((data: EntityAtDistance) => {
+				return data.entity
+			});
 	}
 
-	private removeEntityByID(entityID:number):void {
+	private removeEntityByID(entityID: number): void {
 		var ent = this.getEntity(entityID);
 		var index = this.entities.indexOf(ent);
 		if (index != -1) {
 			this.entities.splice(index, 1);
 		}
 	}
+}
+
+interface EntityAtDistance {
+	dist: number,
+	entity: Entity
 }

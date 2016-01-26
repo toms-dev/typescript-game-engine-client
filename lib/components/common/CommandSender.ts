@@ -13,6 +13,9 @@ export default class CommandSender implements IComponent {
 		this.buffer = [];
 	}
 
+	receiveEvent(eventName: string, args: any[]): void {
+	}
+
 	public add(c: Command): void {
 		this.buffer.push(c);
 	}

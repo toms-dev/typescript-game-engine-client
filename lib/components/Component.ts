@@ -4,17 +4,17 @@ import ComponentBag from "./ComponentBag";
 
 abstract class Component implements IComponent {
 
-	abstract tick(delta:number, now:number):void;
-
 	public parent: ComponentBag;
 
-	constructor() {
-		this.parent = null;
+	constructor(parent: ComponentBag) {
+		this.parent = parent;
 	}
 
-	loadState():any {
-		throw "not implemented!";
-	}
+	abstract tick(delta:number, now:number):void;
+
+	abstract loadState():any;
+
+	abstract receiveEvent(eventName: string, args: any[]): void;
 
 }
 

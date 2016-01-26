@@ -5,6 +5,8 @@ interface IComponent {
 
 	tick(delta: number, now: number): void;
 
+	receiveEvent(eventName: string, args: any[]): void;
+
 }
 
 

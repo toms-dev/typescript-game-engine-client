@@ -1,11 +1,15 @@
 
+import Config from "../../Config";
+
 import IComponent from "./../IComponent";
 import Vector3 from "../../math/Vector3";
-
-import Config from "../../Config";
 import Vector3LERP from "../../math/Vector3LERP";
 
+import Entity from "../../Entity";
+
 export default class Movement implements IComponent {
+
+	private entity: Entity;
 
 	private position: Vector3;
 	private radius: number;
@@ -17,7 +21,8 @@ export default class Movement implements IComponent {
 
 	private firstLoad: boolean;
 
-	constructor() {
+	constructor(entity: Entity) {
+		this.entity = entity;
 		this.position = new Vector3();
 		this.speed = new Vector3();
 		this.radius = 10;
@@ -38,6 +43,9 @@ export default class Movement implements IComponent {
 				this.positionLERP = new Vector3LERP(this.position, targetPosition, Config.lerp);
 			}
 		}
+	}
+
+	receiveEvent(eventName: string, args: any[]): void {
 	}
 
 	tick(delta:number, now: number):void {

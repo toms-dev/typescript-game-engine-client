@@ -1,11 +1,15 @@
 import IComponent from "./components/IComponent";
+import Game from "./Game";
+
 export default class Entity {
 
 	public guid: number;
 	protected components:IComponent[];
 	private debugRawData: any;
+	public game: Game;
 
-	constructor(guid: number = 0) {
+	constructor(game: Game, guid: number = 0) {
+		this.game = game;
 		this.guid = guid;
 		this.components = [];
 	}
@@ -15,6 +19,13 @@ export default class Entity {
 			var comp = this.components[i];
 			comp.tick(delta, now);
 		}
+	}
+
+	emitEvent(name: string, ...args: any[]): void {
+		console.debug("Entity emitting event: "+name);
+		this.components.forEach((comp: IComponent) => {
+			comp.receiveEvent(name, args);
+		});
 	}
 
 	getComponent<T>(constructor: new(...args: any[]) => T): T {
