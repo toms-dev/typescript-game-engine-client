@@ -1,9 +1,14 @@
 
 import IComponent from "../IComponent";
 import Entity from "../../Entity";
+import GameEvent from "../../events/GameEvent";
 
 interface EventBindingDefinition {
 	targetEventName: string,
+	/**
+	 * Additional processing that has to be performed before forwarding the arguments to the target.
+	 * @param args
+	 */
 	argsProcessor: (args: any[]) => any[];
 }
 
@@ -46,17 +51,20 @@ abstract class EventAdapter implements IComponent {
 	tick(delta: number, now: number): void {
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
-		console.debug("Adapter received event:", eventName);
+	receiveEvent(event: GameEvent): void {
+		console.debug("Adapter received event:", event);
 
 		// Get all the events matching the event received
-		var targetEvents = this.bindings[eventName];
+		var targetEvents = this.bindings[event.name];
 		// If some events were found, re-route them
 		if (targetEvents) {
 			console.debug("Got "+targetEvents.length+ " target events.");
-			targetEvents.forEach((targetEvent: EventBindingDefinition) => {
-				var processedArgs = targetEvent.argsProcessor(args);
-				this.entity.emitEvent.apply(this.entity, [targetEvent.targetEventName].concat(processedArgs));
+			targetEvents.forEach((targetEventDefinition: EventBindingDefinition) => {
+				var processedArgs = targetEventDefinition.argsProcessor(event.params);
+				var newEvent = new GameEvent(targetEventDefinition.targetEventName, processedArgs, event.source);
+
+				this.entity.emitEvent(newEvent);
+				//this.entity.emitEvent.apply(this.entity, [targetEvent.targetEventName].concat(processedArgs));
 			});
 		}
 	}

@@ -1,6 +1,7 @@
 
 import Entity from "../../Entity";
 import IComponent from "../IComponent";
+import GameEvent from "../../events/GameEvent";
 export default class Targetable implements IComponent {
 
 	private targeted: boolean;
@@ -11,7 +12,7 @@ export default class Targetable implements IComponent {
 		this.targeted = false;
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
+	receiveEvent(event: GameEvent): void {
 	}
 
 	loadState(entityData:any):void {

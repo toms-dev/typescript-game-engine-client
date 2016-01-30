@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
 import IComponent from "./IComponent";
+import GameEvent from "../events/GameEvent";
 
 abstract class UIElement implements IComponent {
 
@@ -16,7 +17,7 @@ abstract class UIElement implements IComponent {
 
 	abstract tick(delta:number, now:number):void;
 
-	abstract receiveEvent(eventName: string, args: any[]): void;
+	abstract receiveEvent(event: GameEvent): void;
 
 }
 

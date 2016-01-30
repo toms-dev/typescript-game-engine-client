@@ -1,5 +1,7 @@
 import IComponent from "./components/IComponent";
 import Game from "./Game";
+import IEventReceiver from "./events/IGameEventReceiver";
+import GameEvent from "./events/GameEvent";
 
 export default class Entity {
 
@@ -21,11 +23,15 @@ export default class Entity {
 		}
 	}
 
-	emitEvent(name: string, ...args: any[]): void {
-		console.debug("Entity emitting event: "+name);
-		this.components.forEach((comp: IComponent) => {
-			comp.receiveEvent(name, args);
-		});
+	emitEventFromName(name: string, args: any[]): void {
+		var event = new GameEvent(name, args, this);
+		this.emitEvent(event);
+	}
+	emitEvent(event: GameEvent): void {
+		var targets = (<IEventReceiver[]>[this.game]).concat(this.components);
+		console.debug("Entity emitting event: "+event.name+"  to "+targets.length+" targets.");
+
+		event.propagate(targets);
 	}
 
 	getComponent<T>(constructor: new(...args: any[]) => T): T {

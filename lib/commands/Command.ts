@@ -40,6 +40,11 @@ export default class Command {
 	public name: string;
 	public params: any[];
 	public commandID: number;
+	/**
+	 * If set to false, the propagation of the event that triggered this command will be stopped and resumed only upon
+	 * server response.
+	 */
+	public canBeSimulated: boolean;
 	private static commandID_AutoIncrement = 1;
 
 	private successCallback: CommandSuccessCallback;
@@ -53,6 +58,7 @@ export default class Command {
 		this.commandID = Command.commandID_AutoIncrement++;
 		this.name = (<any> CommandType)[type];
 		this.params = args;
+		this.canBeSimulated = false;
 
 		this.successCallback = successCallback;
 

@@ -3,10 +3,14 @@ import Entity from "./lib/Entity";
 import EntityTyping from "./lib/entityTyping/EntityTypings";
 import IComponent from "./lib/components/IComponent";
 import UIComponent from "./lib/components/UIComponent";
+
 import EventAdapter from "./lib/components/common/EventAdapter";
+import GameEvent from "./lib/events/GameEvent";
+
 import MovementComponent from "./lib/components/common/Movement";
 import Command from "./lib/commands/Command";
 import CommandSender from "./lib/components/common/CommandSender";
+import CommandAdapter from "./lib/commands/CommandAdapter";
 
 import * as Math from "./lib/math/index";
 
@@ -26,8 +30,10 @@ export {
 	// Components
 	IComponent, UIComponent, EventAdapter,
 	MovementComponent,
+	// Events
+	GameEvent,
 	// Commands
-	Command, CommandSender,
+	Command, CommandAdapter, CommandSender,
 
 	// Typings
 	EntityTyping,

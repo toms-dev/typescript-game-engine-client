@@ -1,5 +1,6 @@
 
 import IComponent from "./../IComponent";
+import GameEvent from "../../events/GameEvent";
 export default class PlayerControlled implements IComponent {
 
 	private focused: boolean;
@@ -20,7 +21,7 @@ export default class PlayerControlled implements IComponent {
 		return this.focused;
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
+	receiveEvent(event: GameEvent): void {
 	}
 
 	loadState(entityData:any):void {

@@ -1,11 +1,10 @@
+import IEventReceiver from "./../events/IGameEventReceiver";
 
-interface IComponent {
+interface IComponent extends IEventReceiver {
 
 	loadState(entityData: any): void;
 
 	tick(delta: number, now: number): void;
-
-	receiveEvent(eventName: string, args: any[]): void;
 
 }
 

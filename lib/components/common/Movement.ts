@@ -6,6 +6,7 @@ import Vector3 from "../../math/Vector3";
 import Vector3LERP from "../../math/Vector3LERP";
 
 import Entity from "../../Entity";
+import GameEvent from "../../events/GameEvent";
 
 export default class Movement implements IComponent {
 
@@ -45,7 +46,7 @@ export default class Movement implements IComponent {
 		}
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
+	receiveEvent(event: GameEvent): void {
 	}
 
 	tick(delta:number, now: number):void {

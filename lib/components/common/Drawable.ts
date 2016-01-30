@@ -3,6 +3,7 @@ import Renderer from "../../rendering/Renderer";
 import Entity from "../../Entity";
 import Movement from "./Movement";
 import Camera from "../../rendering/Camera";
+import GameEvent from "../../events/GameEvent";
 
 export default class Drawable implements IComponent {
 
@@ -38,7 +39,7 @@ export default class Drawable implements IComponent {
 		this.image.src = "img/"+this.spriteName+".png";
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
+	receiveEvent(event: GameEvent): void {
 	}
 
 	tick(delta:number):void {

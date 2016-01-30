@@ -1,6 +1,7 @@
 
 import IComponent from "./IComponent";
 import ComponentBag from "./ComponentBag";
+import GameEvent from "../events/GameEvent";
 
 abstract class Component implements IComponent {
 
@@ -14,7 +15,7 @@ abstract class Component implements IComponent {
 
 	abstract loadState():any;
 
-	abstract receiveEvent(eventName: string, args: any[]): void;
+	abstract receiveEvent(event: GameEvent): void;
 
 }
 

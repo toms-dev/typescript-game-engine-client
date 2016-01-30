@@ -2,6 +2,7 @@
 import Command from "../../commands/Command";
 import {CommandRequest, CommandResponse} from "../../commands/Command";
 import IComponent from "./../IComponent";
+import GameEvent from "../../events/GameEvent";
 
 export default class CommandSender implements IComponent {
 
@@ -13,7 +14,8 @@ export default class CommandSender implements IComponent {
 		this.buffer = [];
 	}
 
-	receiveEvent(eventName: string, args: any[]): void {
+	receiveEvent(event: GameEvent): void {
+		// TODO: block event propagation
 	}
 
 	public add(c: Command): void {

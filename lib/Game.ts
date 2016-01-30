@@ -16,12 +16,14 @@ import Class from "./utils/Class";
 import {Named as NamedEntityTyping} from "./entityTyping/EntityTypings";
 import EntityTypingClass from "./decorators/EntityTypingClass";
 
+import IGameEventReceiver from "./events/IGameEventReceiver";
+import GameEvent from "./events/GameEvent";
+import CommandAdapter from "./commands/CommandAdapter";
 
 declare var window: any;
 declare var $: any;
 
-export default class Game extends ComponentBag {
-
+export default class Game extends ComponentBag implements IGameEventReceiver {
 	private client: GameClient;
 
 	public world: World;
@@ -38,9 +40,11 @@ export default class Game extends ComponentBag {
 
 	private controlledEntity: Entity;
 
+	public commandSender: CommandSender;
+	public commandAdapters: CommandAdapter[];
+
 	// UI
 	//
-	public commandSender: CommandSender;
 	private uiElements: any[];
 
 	constructor() {
@@ -59,6 +63,8 @@ export default class Game extends ComponentBag {
 		// Manage UI
 		//
 		this.commandSender = new CommandSender();
+		this.commandAdapters = [];
+
 		this.uiElements = [];
 
 		// Make it global
@@ -85,8 +91,8 @@ export default class Game extends ComponentBag {
 		var resolvers: {[metaTypeName: string]: EntityTypeResolver} = {};
 
 		// Instantiate the different kind of resolvers
-		var namedResolver = new NamedEntityTypeResolver();
-		// TODO: load from context (which is fed by decorators in entities)
+		// TODO: Instantiate resolvers from declaration in decorators?
+		var namedResolver = new NamedEntityTypeResolver(this);
 
 		var entityClasses = context.getDeclaredClasses("entity");
 		for (var i = 0; i < entityClasses.length; ++i) {
@@ -210,4 +216,12 @@ export default class Game extends ComponentBag {
 	stopLoop():void {
 		this.doStop = true;
 	}
+
+	receiveEvent(event: GameEvent): void {
+		var targets: IGameEventReceiver[] = [].concat(this.commandAdapters);
+		// TODO: propagate to CommandAdapter map to Command
+		// TODO: propagate to commandSender (and others?).
+		event.addPropagationTargets(targets);
+	}
+
 }
