@@ -19,11 +19,12 @@ import EntityTypingClass from "./decorators/EntityTypingClass";
 import IGameEventReceiver from "./events/IGameEventReceiver";
 import GameEvent from "./events/GameEvent";
 import CommandAdapter from "./commands/CommandAdapter";
+import IGameEventEmitter from "./events/IGameEventEmitter";
 
 declare var window: any;
 declare var $: any;
 
-export default class Game extends ComponentBag implements IGameEventReceiver {
+export default class Game extends ComponentBag implements IGameEventReceiver, IGameEventEmitter {
 	private client: GameClient;
 
 	public world: World;
@@ -219,14 +220,37 @@ export default class Game extends ComponentBag implements IGameEventReceiver {
 		this.doStop = true;
 	}
 
-	receiveEvent(event: GameEvent): void {
-		var targets: IGameEventReceiver[] = []
+	getEventTargets(): IGameEventReceiver[] {
+		return []
 			.concat(this.commandAdapters)
-			.concat(this.commandSender);
+			.concat(this.commandSender)
+			.concat(this.components)
+			.concat(this.world.getEntities())
+			;
+	}
 
-		// TODO: propagate to CommandAdapter map to Command
-		// TODO: propagate to commandSender (and others?).
+	/**
+	 *
+	 * @param event An event that's already propagating.
+	 */
+	receiveEvent(event: GameEvent): void {
+		var targets = this.getEventTargets();
+
 		event.addPropagationTargets(targets);
+	}
+
+	/**
+	 * Ignites the event propagation
+	 * @param event
+	 */
+	fireEvent(event: GameEvent): void {
+		var targets = this.getEventTargets();
+
+		event.propagate(targets);
+	}
+
+	toString(): string {
+		return "@Game";
 	}
 
 }

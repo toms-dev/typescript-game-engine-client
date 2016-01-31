@@ -2,6 +2,8 @@
 import IComponent from "../IComponent";
 import Entity from "../../Entity";
 import GameEvent from "../../events/GameEvent";
+import IGameEventEmitter from "../../events/IGameEventEmitter";
+import IGameEventReceiver from "../../events/IGameEventReceiver";
 
 interface EventBindingDefinition {
 	targetEventName: string,
@@ -14,12 +16,12 @@ interface EventBindingDefinition {
 
 abstract class EventAdapter implements IComponent {
 
-	private entity: Entity;
+	private emitter: IGameEventReceiver;
 	private bindings: {[sourceEventName: string]: EventBindingDefinition[]};
 
 	// TODO: should be passed a component bag insteqd of an entity?
-	constructor(entity: Entity) {
-		this.entity = entity;
+	constructor(emitter: IGameEventReceiver) {
+		this.emitter = emitter;
 		this.bindings = {};
 
 		this.registerEvents();
@@ -52,20 +54,23 @@ abstract class EventAdapter implements IComponent {
 	}
 
 	receiveEvent(event: GameEvent): void {
-		console.debug("EventAdapter received event:"+ event.name);
+		console.debug("EventAdapter '"+(<any>this.constructor).name+"' of "+this.emitter.toString()+" received" +
+			" event:"+ event.name);
 
 		// Get all the events matching the event received
 		var targetEvents = this.bindings[event.name];
 		// If some events were found, re-route them
 		if (targetEvents) {
-			console.debug("-> Got "+targetEvents.length+ " target events binded to event "+event.name);
+			console.group("-> There's "+targetEvents.length+ " target events bound to event "+event.name+": ["
+				+ targetEvents.map((e: EventBindingDefinition) => {return e.targetEventName;}).join(',')+"]");
 			targetEvents.forEach((targetEventDefinition: EventBindingDefinition) => {
 				var processedArgs = targetEventDefinition.argsProcessor(event.params);
 				var newEvent = new GameEvent(targetEventDefinition.targetEventName, processedArgs, event.source);
 
-				this.entity.emitEvent(newEvent);
-				//this.entity.emitEvent.apply(this.entity, [targetEvent.targetEventName].concat(processedArgs));
+				//this.emitter.fireEvent(newEvent);
+				newEvent.propagate([this.emitter]);
 			});
+			console.groupEnd();
 		}
 	}
 

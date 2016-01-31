@@ -1,13 +1,19 @@
 import {EventEmitter} from "events";
+import Game from "../Game";
 import IComponent from "./IComponent";
 import GameEvent from "../events/GameEvent";
+import IGameEventEmitter from "../events/IGameEventEmitter";
 
-abstract class UIElement implements IComponent {
+abstract class UIElement implements IComponent, IGameEventEmitter {
 
-	public eventEmitter:EventEmitter;
+	protected game: Game;
+	private eventEmitter:EventEmitter;
 
-	constructor() {
+	constructor(game: Game) {
+		this.game = game;
 		this.eventEmitter = new EventEmitter();
+
+		this.setup();
 	}
 
 	abstract setup(): void;
@@ -18,6 +24,12 @@ abstract class UIElement implements IComponent {
 	abstract tick(delta:number, now:number):void;
 
 	abstract receiveEvent(event: GameEvent): void;
+
+	public fireEvent(event: GameEvent): void {
+		console.group("Firing event up to Game: "+event.name);
+		this.game.fireEvent(event);
+		console.groupEnd();
+	}
 
 }
 
