@@ -6,7 +6,9 @@ export default class GameEvent {
 	public params: any[];
 	public source: any;
 
-	public propagationStopped: boolean;
+	public isLocallySimulated: boolean;
+
+	private propagationStopped: boolean;
 	private activeTargets: IGameEventReceiver[];
 	private pendingTargets: IGameEventReceiver[];
 
@@ -16,6 +18,8 @@ export default class GameEvent {
 		this.name = name;
 		this.params = params;
 		this.source = source;
+
+		this.isLocallySimulated = true;
 
 		this.isActive = false;
 		this.propagationStopped = false;
@@ -28,9 +32,11 @@ export default class GameEvent {
 		}
 		this.isActive = true;
 		this.activeTargets = targets;
+		// Propagate the event to all the targets.
+		// Note: the list of target may be modified during execution, to append additional ones.
 		for (var i = 0; i < this.activeTargets.length; ++i) {
 			var target = this.activeTargets[i];
-			console.log("Target["+i+"] = ", target);
+			//console.log("Target["+i+"] = ", target);
 			target.receiveEvent(this);
 
 			// If the propagation is stopped, store the remaining targets that have to be notified if the propagation is

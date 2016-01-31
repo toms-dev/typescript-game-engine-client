@@ -13,7 +13,7 @@ export interface CommandFailureCallback {
 export interface CommandRequest {
 	commandID: number;
 	name: string;
-	params: any[];
+	data: any;
 }
 
 /**
@@ -38,7 +38,8 @@ export interface CommandFailureResponse extends CommandResponse{
  */
 export default class Command {
 	public name: string;
-	public params: any[];
+	//public params: any[];
+	public data: any;
 	public commandID: number;
 	/**
 	 * If set to false, the propagation of the event that triggered this command will be stopped and resumed only upon
@@ -50,14 +51,15 @@ export default class Command {
 	private successCallback: CommandSuccessCallback;
 	private failureCallback: CommandFailureCallback;
 
-	constructor(type:string, args:any[] = [],
+	constructor(type:string, data: any = null,
 	//constructor(type:CommandType, args:any[] = [],
 				successCallback: CommandSuccessCallback = null,
 				failureCallback: CommandFailureCallback = null
 	) {
 		this.commandID = Command.commandID_AutoIncrement++;
-		this.name = (<any> CommandType)[type];
-		this.params = args;
+		//this.name = (<any> CommandType)[type];
+		this.name = type;
+		this.data = data;
 		this.canBeSimulated = false;
 
 		this.successCallback = successCallback;
@@ -91,7 +93,7 @@ export default class Command {
 	public getState(): CommandRequest {
 		return {
 			name: this.name,
-			params: this.params,
+			data: this.data,
 			commandID: this.commandID
 		}
 	}

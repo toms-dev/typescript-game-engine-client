@@ -9,15 +9,25 @@ export default class CommandSender implements IComponent {
 	private sentCommands: Command[];
 	private buffer: Command[];
 
+	public static EVENT_QUEUE_COMMAND = "EVENT_QUEUE_COMMAND";
+
 	constructor() {
 		this.sentCommands = [];
 		this.buffer = [];
 	}
 
 	receiveEvent(event: GameEvent): void {
+		if (event.name == CommandSender.EVENT_QUEUE_COMMAND) {
+			var command: Command = event.params[0];
+			this.add(command);
+		}
 		// TODO: block event propagation
 	}
 
+	/**
+	 * Queues a command to be sent on next push to server.
+	 * @param c
+	 */
 	public add(c: Command): void {
 		this.buffer.push(c);
 	}
@@ -52,6 +62,10 @@ export default class CommandSender implements IComponent {
 
 	flush(): CommandRequest[] {
 		var commands = this.buffer;
+		if (commands.length > 0) {
+			console.log("Flushing "+commands.length + " commands to server.");
+			console.debug("Flushed commands are: ", commands);
+		}
 		this.sentCommands = this.sentCommands.concat(this.buffer);
 		this.buffer = [];
 		return commands.map((c: Command) => {

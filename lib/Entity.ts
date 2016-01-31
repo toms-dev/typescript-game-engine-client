@@ -29,7 +29,7 @@ export default class Entity {
 	}
 	emitEvent(event: GameEvent): void {
 		var targets = (<IEventReceiver[]>[this.game]).concat(this.components);
-		console.debug("Entity emitting event: "+event.name+"  to "+targets.length+" targets.");
+		console.debug("Entity#"+this.guid+" ("+(<any>this.constructor).name+") emitting event: "+event.name+"  to "+targets.length+" targets.");
 
 		event.propagate(targets);
 	}

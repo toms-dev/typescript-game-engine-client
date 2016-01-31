@@ -52,13 +52,13 @@ abstract class EventAdapter implements IComponent {
 	}
 
 	receiveEvent(event: GameEvent): void {
-		console.debug("Adapter received event:", event);
+		console.debug("EventAdapter received event:"+ event.name);
 
 		// Get all the events matching the event received
 		var targetEvents = this.bindings[event.name];
 		// If some events were found, re-route them
 		if (targetEvents) {
-			console.debug("Got "+targetEvents.length+ " target events.");
+			console.debug("-> Got "+targetEvents.length+ " target events binded to event "+event.name);
 			targetEvents.forEach((targetEventDefinition: EventBindingDefinition) => {
 				var processedArgs = targetEventDefinition.argsProcessor(event.params);
 				var newEvent = new GameEvent(targetEventDefinition.targetEventName, processedArgs, event.source);

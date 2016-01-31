@@ -47,6 +47,8 @@ export default class Game extends ComponentBag implements IGameEventReceiver {
 	//
 	private uiElements: any[];
 
+	public fakeLocalLag = 0;
+
 	constructor() {
 		super();
 		var host = window.location.hostname;
@@ -165,10 +167,10 @@ export default class Game extends ComponentBag implements IGameEventReceiver {
 			return;
 		}
 		requestAnimationFrame(() => {
-			/*setTimeout(() => {
+			setTimeout(() => {
 				this.mainLoop();
-			}, 500);*/
-			this.mainLoop();
+			}, this.fakeLocalLag);
+			//this.mainLoop();
 		});
 
 		var now = new Date().getTime();
@@ -218,7 +220,10 @@ export default class Game extends ComponentBag implements IGameEventReceiver {
 	}
 
 	receiveEvent(event: GameEvent): void {
-		var targets: IGameEventReceiver[] = [].concat(this.commandAdapters);
+		var targets: IGameEventReceiver[] = []
+			.concat(this.commandAdapters)
+			.concat(this.commandSender);
+
 		// TODO: propagate to CommandAdapter map to Command
 		// TODO: propagate to commandSender (and others?).
 		event.addPropagationTargets(targets);

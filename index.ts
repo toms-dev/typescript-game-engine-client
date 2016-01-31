@@ -6,6 +6,7 @@ import UIComponent from "./lib/components/UIComponent";
 
 import EventAdapter from "./lib/components/common/EventAdapter";
 import GameEvent from "./lib/events/GameEvent";
+import IGameEventReceiver from "./lib/events/IGameEventReceiver";
 
 import MovementComponent from "./lib/components/common/Movement";
 import Command from "./lib/commands/Command";
@@ -31,7 +32,7 @@ export {
 	IComponent, UIComponent, EventAdapter,
 	MovementComponent,
 	// Events
-	GameEvent,
+	GameEvent, IGameEventReceiver,
 	// Commands
 	Command, CommandAdapter, CommandSender,
 
