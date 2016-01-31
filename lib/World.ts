@@ -139,7 +139,7 @@ export default class World {
 			})
 			.filter((data: EntityAtDistance) => {
 				var movement: Movement = data.entity.getComponent(Movement);
-				return data.dist <= movement.getRadius();
+				return data.dist <= movement.radius;
 			})
 			.sort((data1: EntityAtDistance, data2: EntityAtDistance) => {
 				return data1.dist - data2.dist;

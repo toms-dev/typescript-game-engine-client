@@ -13,7 +13,7 @@ export default class Movement implements IComponent {
 	private entity: Entity;
 
 	private position: Vector3;
-	private radius: number;
+	public radius: number;
 	private speed: Vector3;
 	private maxSpeed: number;
 	private acceleration: Vector3;
@@ -78,7 +78,4 @@ export default class Movement implements IComponent {
 		return this.position;
 	}
 
-	getRadius():number {
-		return this.radius;
-	}
 }
