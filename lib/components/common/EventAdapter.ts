@@ -67,7 +67,7 @@ abstract class EventAdapter implements IComponent {
 				var processedArgs = targetEventDefinition.argsProcessor(event.params);
 				var newEvent = new GameEvent(targetEventDefinition.targetEventName, processedArgs, event.source);
 
-				//this.emitter.fireEvent(newEvent);
+				// Make the event bubble down only (and no bubble up, as it would be processed multiple times)
 				newEvent.propagate([this.emitter]);
 			});
 			console.groupEnd();
