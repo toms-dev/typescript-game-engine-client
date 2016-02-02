@@ -21,15 +21,19 @@ import GameEvent from "./events/GameEvent";
 import CommandAdapter from "./commands/CommandAdapter";
 import IGameEventEmitter from "./events/IGameEventEmitter";
 
+import {Entity as SharedEntity, DecorationContext as SharedDecorationContext} from "typescript-game-engine-server";
+
 declare var window: any;
 declare var $: any;
 
 export default class Game extends ComponentBag implements IGameEventReceiver, IGameEventEmitter {
 	private client: GameClient;
 
+	public rootEntity: SharedEntity;
 	public world: World;
 
 	public context: DecorationContext;
+	public sharedContext: SharedDecorationContext;
 
 	// Rendering
 	private renderer: Renderer;
@@ -136,7 +140,7 @@ export default class Game extends ComponentBag implements IGameEventReceiver, IG
 
 	onGameJoin() {
 		// TODO: renderer refactoring: make it a plugable component
-		// Setup renderer
+		/*// Setup renderer
 		var $canvas = $("#gameView");
 		var canvas = $canvas.get(0);
 		this.renderer = new Renderer($canvas, this.world);
@@ -145,13 +149,13 @@ export default class Game extends ComponentBag implements IGameEventReceiver, IG
 
 		this.keyboard.setup();
 
-		this.mouse.setup(canvas, this.renderer.getCamera());
+		this.mouse.setup(canvas, this.renderer.getCamera());*/
 
 		this.startLoop();
 	}
 
 	public onDisconnected() {
-		$("#disconnectedView").fadeIn();	// TODO: move this in a UI-dedicated component
+		//$("#disconnectedView").fadeIn();	// TODO: move this in a UI-dedicated component
 		this.stopLoop();
 	}
 
@@ -206,14 +210,21 @@ export default class Game extends ComponentBag implements IGameEventReceiver, IG
 	}
 
 	processServerState(data: ServerState):void {
-		this.world.processServerState(data.world);
+		window.lastServerState = data.world;
+		//console.group("Processing server state");
+		this.rootEntity.fromState(data.world, this.sharedContext);
+		//console.groupEnd();
+
+		/*window.debugStop = window.debugStop ? window.debugStop + 1 : 1;
+		if (window.debugStop == 2) throw new Error("debug end");*/
+
+		//this.world.processServerState(data.world);
 		this.commandSender.processCommandResponses(data.commandResponses);
 		//console.log("Got server state:", data);
 	}
 
 	processPingValue(ping:number):void {
-		// TODO: improve this, sometime
-		$("#pingValue").text(ping);
+		//$("#pingValue").text(ping);
 	}
 
 	stopLoop():void {

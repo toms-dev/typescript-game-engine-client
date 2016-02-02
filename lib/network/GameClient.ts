@@ -97,7 +97,7 @@ export default class GameClient {
 				console.error("Error while calling handler of message '"+json.type+"'.");
 				console.log("-> Payload was:", payload);
 				this.game.stopLoop();
-				throw new Error(e);
+				throw e;
 			}
 		}
 	}

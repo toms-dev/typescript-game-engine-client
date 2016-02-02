@@ -6,7 +6,9 @@
   "scripts": {
     "postinstall": "tsd link && tsd reinstall rebundle && tsc"
   },
-  "author": "Tom Guillermin",
+  "author": {
+    "name": "Tom Guillermin"
+  },
   "license": "ISC",
   "dependencies": {
     "browserify": "^13.0.0",
@@ -14,5 +16,10 @@
     "reflect-metadata": "^0.1.3",
     "tsd": "^0.6.5",
     "typescript": "^1.7.5"
-  }
+  },
+  "readme": "ERROR: No README data found!",
+  "_id": "typescript-game-engine-client@0.0.1",
+  "_shasum": "8a338bbf435d13f27f3314c5520d862cb1b76396",
+  "_from": "..\\..\\client",
+  "_resolved": "file:..\\..\\client"
 }
