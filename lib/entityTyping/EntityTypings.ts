@@ -21,8 +21,8 @@ var EntityTypings = {
 	Named: NamedEntityType
 };
 
-export default EntityTypings;
 export {
 	NamedEntityType as Named,
 	TraitEntityTyping as Trait
 }
+export default EntityTypings;

@@ -2,12 +2,20 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
+    "outDir": "./dist",
+    "inlineSourceMap": true,
     "noImplicitAny": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowUnreachableCode": true,
+    "declaration": true
   },
+  "files": [
+    "index.ts",
+    "typings/main.d.ts"
+  ],
   "exclude": [
     "node_modules",
-    "typings.d.ts"
+    "typings/browser.d.ts",
+    "typings/browser"
   ]
 }

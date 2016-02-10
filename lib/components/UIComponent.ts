@@ -12,8 +12,6 @@ abstract class UIElement implements IComponent, IGameEventEmitter {
 	constructor(game: Game) {
 		this.game = game;
 		this.eventEmitter = new EventEmitter();
-
-		this.setup();
 	}
 
 	abstract setup(): void;

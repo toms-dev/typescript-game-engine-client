@@ -1,7 +1,9 @@
 import Entity from "../Entity";
 import Class from "../utils/Class";
 import DecorationContext from "./DecorationContext";
+
 import EntityTypingClass from "./EntityTypingClass";
+import {DecorationContext as SharedDecorationContext} from "typescript-game-engine-server";
 
 require('reflect-metadata');
 

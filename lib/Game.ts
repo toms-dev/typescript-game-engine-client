@@ -16,6 +16,9 @@ import Class from "./utils/Class";
 import {Named as NamedEntityTyping} from "./entityTyping/EntityTypings";
 import EntityTypingClass from "./decorators/EntityTypingClass";
 
+import IComponent from "./components/IComponent";
+import UIComponent from "./components/UIComponent";
+
 import IGameEventReceiver from "./events/IGameEventReceiver";
 import GameEvent from "./events/GameEvent";
 import CommandAdapter from "./commands/CommandAdapter";
@@ -171,12 +174,6 @@ export default class Game extends ComponentBag implements IGameEventReceiver, IG
 			console.log("Loop stopped");
 			return;
 		}
-		requestAnimationFrame(() => {
-			setTimeout(() => {
-				this.mainLoop();
-			}, this.fakeLocalLag);
-			//this.mainLoop();
-		});
 
 		var now = new Date().getTime();
 		var delta = now - this.lastUpdate; //10;	// FIXME: calculate for real
@@ -207,14 +204,30 @@ export default class Game extends ComponentBag implements IGameEventReceiver, IG
 
 		this.tick(delta, now);
 		//this.renderer.render();
+
+		requestAnimationFrame(() => {
+			this.mainLoop();
+			/*setTimeout(() => {
+				this.mainLoop();
+			}, this.fakeLocalLag);*/
+		});
+	}
+
+	public addComponent(component: IComponent): void {
+		super.addComponent(component);
+		if (component instanceof UIComponent) {
+			component.setup();
+		}
 	}
 
 	processServerState(data: ServerState):void {
 		window.lastServerState = data.world;
-		//console.group("Processing server state");
+		var log = false;
+		if (log) console.group("Processing server state");
 		this.rootEntity.fromState(data.world, this.sharedContext);
-		//console.groupEnd();
+		if (log) console.groupEnd();
 
+		//throw "the end!";
 		/*window.debugStop = window.debugStop ? window.debugStop + 1 : 1;
 		if (window.debugStop == 2) throw new Error("debug end");*/
 
