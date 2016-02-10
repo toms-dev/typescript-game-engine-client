@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublish": "typings install && npm run build"
+    "prepublish": "typings install && npm run build",
+    "test": "npm run prepublish"
   },
   "author": {
     "name": "Tom Guillermin"
