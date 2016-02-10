@@ -20,10 +20,6 @@ import * as Declare from "./lib/decorators/index";
 import Loader from "./lib/decorators/Loader";
 import DecorationContext from "./lib/decorators/DecorationContext";
 
-// Hack to load typings when used in a lib ;) (as references are not allowed in index file)
-/*import Definitions from "./lib/_definitions";
-Definitions;*/
-
 export {
 	// Decorators
 	Declare, Loader, DecorationContext,
