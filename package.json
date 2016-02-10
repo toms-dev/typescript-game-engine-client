@@ -10,8 +10,10 @@
   ],
   "scripts": {
     "build": "tsc",
+    "install": "npm run gitinstall",
     "prepublish": "typings install && npm run build",
-    "test": "npm run prepublish"
+    "test": "npm run prepublish",
+    "gitinstall": "cd node_modules && git clone https://github.com/toms-dev/typescript-game-engine-server.git && cd typescript-game-engine-server && npm install"
   },
   "author": {
     "name": "Tom Guillermin"
@@ -22,8 +24,7 @@
     "dts-generator": "^1.6.3",
     "reflect-metadata": "^0.1.3",
     "typescript": "^1.8.0",
-    "typings": "^0.6.7",
-    "typescript-game-engine-server": "https://github.com/toms-dev/typescript-game-engine-server.git"
+    "typings": "^0.6.7"
   },
   "readme": "ERROR: No README data found!",
   "_id": "typescript-game-engine-client@0.0.1",
