@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "install": "npm run gitinstall",
+    "postinstall": "npm run gitinstall",
     "prepublish": "typings install && npm run build",
     "test": "npm run prepublish",
     "gitinstall": "sh scripts/build_server_dep.sh"
