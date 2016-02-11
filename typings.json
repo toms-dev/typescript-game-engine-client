@@ -1,8 +1,7 @@
 {
   "name": "typescript-game-engine-client",
-  "main": "dist/index.d.ts",
   "dependencies": {
-    "typescript-game-engine-server": "file:./node_modules/typescript-game-engine-server/typings.json"
+    "dummy-typescript-game-engine-server": "file:./node_modules/typescript-game-engine-server/typings.json"
   },
   "ambientDependencies": {
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#7f07bd88d1083e995a0dae317a333c9641320cc8",
