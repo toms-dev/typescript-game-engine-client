@@ -13,7 +13,7 @@
     "install": "npm run gitinstall",
     "prepublish": "typings install && npm run build",
     "test": "npm run prepublish",
-    "gitinstall": "cd node_modules && git clone -b build-compiled https://github.com/toms-dev/typescript-game-engine-server.git && cd typescript-game-engine-server && npm install"
+    "gitinstall": "sh scripts/pull_server_dep.sh"
   },
   "author": {
     "name": "Tom Guillermin"
