@@ -9,13 +9,11 @@
     "allowUnreachableCode": true,
     "declaration": true
   },
-  "files": [
-    "index.ts",
-    "typings/main.d.ts"
-  ],
   "exclude": [
+    "dist",
     "node_modules",
     "typings/browser.d.ts",
-    "typings/browser"
+    "typings/browser",
+    "scripts"
   ]
 }
